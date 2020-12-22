@@ -34,7 +34,6 @@ Replace the `start`, `build` and `test` scripts inside `package.json`:
 
 ```json
 {
-    // ...
     "scripts": {
         "start": "craco start",
         "build": "craco build",
