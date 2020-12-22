@@ -1,8 +1,10 @@
-# Getting Started with tailwindcss
+# Getting Started with Tailwindcss
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To create a CRA + TS + tailwindcss project from scratch follow these instructions. Alternatively, just pull the repo and run `npm i`.
 
 ## Create React App (CRA) Setup
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 This setup uses the TypeScript template and `npm` as the package manager. If you prefer not to use TypeScript, simply leave out the flag. Similarly, if you prefer to stick to `yarn` as your package manager then remove `--use-npm`.
 
