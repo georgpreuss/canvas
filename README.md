@@ -1,46 +1,120 @@
-# Getting Started with Create React App
+# Getting Started with tailwindcss
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Create React App (CRA) Setup
 
-In the project directory, you can run:
+This setup uses the TypeScript template and `npm` as the package manager. If you prefer not to use TypeScript, simply leave out the flag. Similarly, if you prefer to stick to `yarn` as your package manager then remove `--use-npm`.
 
-### `npm start`
+Otherwise, just run this command calling your project whatever you want
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`npx create-react-app [PROJECTNAME] --template typescript --use-npm`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Once your project has been set up feel free to delete any unwanted files that CRA generates for you.
 
-### `npm test`
+## Tailwind Setup
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+These instructions are taken from the official tailwindcss documentation, which you can access [here](https://tailwindcss.com/docs/installation).
 
-### `npm run build`
+### Step 1
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This project uses CRA v4.0.1 which doesn't yet support PostCSS 8. Therefore, the following compatibility build is necessary:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+`npm i tailwindcss@npm:@tailwindcss/postcss7-compat @tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Step 2
 
-### `npm run eject`
+Since CRA doesn't let you override the PostCSS configuration natively, you also need to install CRACO to be able to configure Tailwind:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+`npm i @craco/craco`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Replace the `start`, `build` and `test` scripts inside `package.json`:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```json
+{
+    // ...
+    "scripts": {
+        "start": "craco start",
+        "build": "craco build",
+        "test": "craco test",
+        "eject": "react-scripts eject"
+    }
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Find out more about CRACO [here](https://github.com/gsoft-inc/craco).
 
-## Learn More
+### Step 3
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Next, create a `craco.config.js` at the root of your project and add the tailwindcss and autoprefixer as PostCSS plugins:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```javascript
+// craco.config.js
+module.exports = {
+    style: {
+        postcss: {
+            plugins: [require('tailwindcss'), require('autoprefixer')],
+        },
+    },
+}
+```
+
+### Step 4
+
+Next, generate your `tailwind.config.js` file by running `npx tailwindcss init`
+
+### Step 5
+
+In your newly generated `tailwind.config.js` configure the purge option with the paths to all of your components so Tailwind can tree-shake unused styles in production builds. Your file should look like this:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+    purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+    darkMode: false, // or 'media' or 'class'
+    theme: {
+        extend: {},
+    },
+    variants: {
+        extend: {},
+    },
+    plugins: [],
+}
+```
+
+### Step 6
+
+Open the `./src/index.css` file that CRA generates for you by default and use the @tailwind directive to include Tailwind's base, components, and utilities styles, replacing the original file contents:
+
+```css
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### Step 7
+
+Finally, ensure your CSS file is being imported in your `./src/index.js` file:
+
+```javascript
+// src/index.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import './index.css'
+import App from './App'
+import reportWebVitals from './reportWebVitals'
+
+ReactDOM.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+)
+
+// ...
+```
+
+## Setup complete!
+
+That's it! You can now start your app with `npm run start`.
